@@ -1,0 +1,11 @@
+{
+  "name": "another-blog-in-the-wall",
+  "version": "1.0.0",
+  "description": "Another blog in the wall",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Fernando de la Cruz",
+  "license": "ISC"
+}
