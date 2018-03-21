@@ -26,3 +26,7 @@ export async function updatePostById(id, post) {
   }
   return await Post.findOneAndUpdate({_id: id}, {$set: updateData}, {new: true});
 }
+
+export async function getAllPosts() {
+  return await Post.find({});
+}

@@ -77,6 +77,15 @@ describe('Blog project', () => {
       });
     });
 
+    it('It should get all existing posts', (done) => {
+      chai.request(app)
+      .get('/post')
+      .end((err, res) => {
+        res.should.have.status(200);
+        done();
+      });
+    });
+
     it('It should update a valid post', (done) => {
       const post = {
         title: "Test post",
