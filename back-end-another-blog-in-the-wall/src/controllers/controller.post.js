@@ -11,3 +11,18 @@ export async function createPost(post) {
 export async function getPostById(id) {
   return await Post.findById(id);
 }
+
+export async function updatePostById(id, post) {
+  const {title = null, body = null} = post;
+  const updateData = {};
+  if(title){
+    updateData.title = title;
+  }
+  if(body){
+    updateData.body = body;
+  }
+  if(!title && !body) {
+    throw 'Empty data';
+  }
+  return await Post.findOneAndUpdate({_id: id}, {$set: updateData}, {new: true});
+}

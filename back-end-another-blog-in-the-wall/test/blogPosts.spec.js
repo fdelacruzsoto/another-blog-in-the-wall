@@ -11,7 +11,7 @@ describe('Blog project', () => {
 
   describe('Blog posts - CRUD', () => {
 
-    it('It should POST a valid post', (done) => {
+    it('It should create a new post', (done) => {
       const post = {
         title: "Test post",
         body: "Just a test",
@@ -27,7 +27,7 @@ describe('Blog project', () => {
       });
     });
 
-    it('It should POST a post with missing fields', (done) => {
+    it('It should not create a post with missing fields', (done) => {
       const post = {
         title: "Test post missing field",
         authorId: "123456",
@@ -42,7 +42,7 @@ describe('Blog project', () => {
       });
     });
 
-    it('It should not POST a valid post without the token', (done) => {
+    it('It should not create a valid post without the token', (done) => {
       const post = {
         title: "Test fail post",
         body: "Just a test to fail",
@@ -73,6 +73,50 @@ describe('Blog project', () => {
       .get(`/post/${id}`)
       .end((err, res) => {
         res.should.have.status(404);
+        done();
+      });
+    });
+
+    it('It should update a valid post', (done) => {
+      const post = {
+        title: "Test post",
+        id: "5ab1ca58710f711880b02ab4",
+      }
+      chai.request(app)
+      .put('/post')
+      .set('token', 'sup3rS3cr3tT0k3n')
+      .send(post)
+      .end((err, res) => {
+        res.should.have.status(200);
+        done();
+      });
+    });
+
+    it('It should not update a post with missing fields', (done) => {
+      const post = {
+        id: "5ab1ca58710f711880b02ab4",
+      }
+      chai.request(app)
+      .put('/post')
+      .set('token', 'sup3rS3cr3tT0k3n')
+      .send(post)
+      .end((err, res) => {
+        res.should.have.status(500);
+        done();
+      });
+    });
+
+    it('It should not update a valid post without the token', (done) => {
+      const post = {
+        title: "Test fail post",
+        body: "Just a test to fail",
+        authorId: "123456",
+      }
+      chai.request(app)
+      .put('/post')
+      .send(post)
+      .end((err, res) => {
+        res.should.have.status(401);
         done();
       });
     });

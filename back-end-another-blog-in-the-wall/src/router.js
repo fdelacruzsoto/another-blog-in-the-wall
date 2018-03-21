@@ -1,5 +1,9 @@
 import * as status from 'http-status';
-import {createPost, getPostById} from './controllers/controller.post';
+import {
+  createPost,
+  getPostById,
+  updatePostById,
+} from './controllers/controller.post';
 
 export const init = (app) => {
 
@@ -34,6 +38,23 @@ export const init = (app) => {
       res.status(status.NOT_FOUND).json({
         error: true,
         message: 'Post not found.'
+      });
+    }
+  });
+
+  app.put('/post', isAuthenticated, async (req, res) => {
+    const {body: post} = req;
+    try {
+      const updatedPost = await updatePostById(post.id, post);
+      console.log(`LOG: updatedPost`, JSON.stringify(updatedPost, null, 3));
+      res.status(status.OK).json({
+        error: 'false',
+        post: updatedPost
+      });
+    } catch (e) {
+      res.status(status.INTERNAL_SERVER_ERROR).json({
+        error: true,
+        message: 'Error while updating post.'
       });
     }
   });
