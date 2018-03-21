@@ -39,8 +39,8 @@ app.use(bodyParser.json({limit: '1000mb', parameterLimit: 10000000}));
 
 init(app);
 
-app.listen(3000, () => {
-  console.log('Example app listening on port 3000!');
+app.listen(port, () => {
+  console.log(`Another blog in the wall running on port ${port}`);
 });
 
 export default app;
