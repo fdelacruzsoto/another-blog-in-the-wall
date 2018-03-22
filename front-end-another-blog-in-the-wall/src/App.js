@@ -32,6 +32,8 @@ class App extends Component {
     post: {},
     title: '',
     body: '',
+    alertVisible: false,
+    data: {error: false}
   }
 
   async componentDidMount() {
@@ -46,7 +48,7 @@ class App extends Component {
 
   render() {
 
-    const {posts, error} = this.state;
+    const {posts, error, data, alertVisible} = this.state;
 
     return (
       <div className="App">
@@ -63,6 +65,9 @@ class App extends Component {
           <Alert color="danger">
             Error getting posts from server
           </Alert>}
+          <Alert color="danger" isOpen={alertVisible} toggle={this.toggleAlert}>
+            {data.message && data.message}
+          </Alert>
           {!error &&
           <ListGroup>
             <ListGroupItem key="add">
@@ -158,14 +163,15 @@ class App extends Component {
     };
     try {
       const response = await axios.post('http://localhost:3333/post', data, config);
-      console.log(`LOG: response`, JSON.stringify(response, null, 3));
       this.setState({
         modalAddNew: !this.state.modalAddNew,
+        data: response.data,
       });
     } catch (e) {
-      console.log(`LOG: e`, JSON.stringify(e, null, 3));
       this.setState({
         modalAddNew: !this.state.modalAddNew,
+        data: e.response.data,
+        alertVisible: true,
       });
     }
   }
@@ -182,14 +188,15 @@ class App extends Component {
     };
     try {
       const response = await axios.put('http://localhost:3333/post', data, config);
-      console.log(`LOG: response`, JSON.stringify(response, null, 3));
       this.setState({
         modalEdit: !this.state.modalEdit,
+        data: response.data,
       });
     } catch (e) {
-      console.log(`LOG: e`, JSON.stringify(e, null, 3));
       this.setState({
         modalEdit: !this.state.modalEdit,
+        data: e.response.data,
+        alertVisible: true,
       });
     }
   }
@@ -211,6 +218,12 @@ class App extends Component {
     this.setState({
       modalView: !this.state.modalView,
       post: post,
+    });
+  }
+
+  toggleAlert = () => {
+    this.setState({
+      alertVisible: !this.state.alertVisible,
     });
   }
 
