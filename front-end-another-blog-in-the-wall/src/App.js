@@ -53,7 +53,9 @@ class App extends Component {
             <ListGroupItem key="add">
               <Button color="primary">Add new post</Button>
             </ListGroupItem>
-            {posts.length && posts.map((post, i) => <ListGroupItem key={i}>{post.title} <i class="fa fa-edit"></i></ListGroupItem>)}
+            {posts.length && posts.map((post, i) => <ListGroupItem key={i}>
+              {post.title} <Button outline className="fa fa-edit" color="primary"></Button>
+            </ListGroupItem>)}
           </ListGroup>}
         </div>
       </div>
