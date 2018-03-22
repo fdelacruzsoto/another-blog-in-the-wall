@@ -28,6 +28,7 @@ class App extends Component {
     error: false,
     modalAddNew: false,
     modalEdit: false,
+    modalView: false,
     post: {},
     title: '',
     body: '',
@@ -71,10 +72,21 @@ class App extends Component {
             </ListGroupItem>
             {posts.length && posts.map((post, i) => <ListGroupItem key={i}>
               {post.title} <Button outline className="fa fa-edit" color="primary" value={post}
-                                   onClick={() => this.toggleEdit(post)}></Button>
+                                   onClick={() => this.toggleEdit(post)}/>
+              <Button outline className="fa fa-eye" color="primary" value={post}
+                      onClick={() => this.toggleViewPost(post)}/>
             </ListGroupItem>)}
           </ListGroup>}
         </div>
+
+        <Modal isOpen={this.state.modalView} toggle={this.toggleViewPost}>
+          <ModalHeader toggle={() => this.toggleViewPost()}>{this.state.post && this.state.post.title}</ModalHeader>
+          <ModalBody>
+            {this.state.post && this.state.post.body}
+          </ModalBody>
+          <ModalFooter>
+          </ModalFooter>
+        </Modal>
 
         <Modal isOpen={this.state.modalAddNew} toggle={this.toggleAddNew}>
           <ModalHeader toggle={this.toggleAddNew}>Add a new post</ModalHeader>
@@ -82,11 +94,19 @@ class App extends Component {
             <Form>
               <FormGroup>
                 <Label for="title">Title</Label>
-                <Input onChange={this.titleChanged} type="text" name="title" id="title" placeholder="Post title"/>
+                <Input onChange={this.titleChanged}
+                       type="text"
+                       name="title"
+                       id="title"
+                       placeholder="Post title"/>
               </FormGroup>
               <FormGroup>
                 <Label for="body">Body</Label>
-                <Input onChange={this.bodyChanged} type="text" name="body" id="title" placeholder="Post title"/>
+                <Input onChange={this.bodyChanged}
+                       type="text"
+                       name="body"
+                       id="title"
+                       placeholder="Post title"/>
               </FormGroup>
             </Form>
           </ModalBody>
@@ -98,15 +118,28 @@ class App extends Component {
         <Modal isOpen={this.state.modalEdit} toggle={this.toggleEdit}>
           <ModalHeader toggle={() => this.toggleEdit()}>Edit existing post</ModalHeader>
           <ModalBody>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-            dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-            ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-            nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit
-            anim id est laborum.
+            <Form>
+              <FormGroup>
+                If you don't want to update a field you can leave the input empty
+                <Label for="title">{this.state.post ? this.state.post.title : ''}</Label>
+                <Input onChange={this.titleChanged}
+                       type="text"
+                       name="title"
+                       id="title"
+                       placeholder="Post new title"/>
+              </FormGroup>
+              <FormGroup>
+                <Label for="body">{this.state.post ? this.state.post.body : ''}</Label>
+                <Input onChange={this.bodyChanged}
+                       type="text"
+                       name="body"
+                       id="title"
+                       placeholder="Post new body"/>
+              </FormGroup>
+            </Form>
           </ModalBody>
           <ModalFooter>
-            <Button color="primary">Save post</Button>{' '}
-            <Button color="secondary">Cancel</Button>
+            <Button value={this.state.post && this.state.post._id} color="primary" onClick={this.updatePost}>Save post</Button>
           </ModalFooter>
         </Modal>
       </div>
@@ -126,8 +159,38 @@ class App extends Component {
     try {
       const response = await axios.post('http://localhost:3333/post', data, config);
       console.log(`LOG: response`, JSON.stringify(response, null, 3));
+      this.setState({
+        modalAddNew: !this.state.modalAddNew,
+      });
     } catch (e) {
       console.log(`LOG: e`, JSON.stringify(e, null, 3));
+      this.setState({
+        modalAddNew: !this.state.modalAddNew,
+      });
+    }
+  }
+
+  updatePost = async (e) => {
+    const {title, body} = this.state;
+    const data = {
+      title: title,
+      body: body,
+      id: e.target.value
+    };
+    const config = {
+      headers: {'token': 'sup3rS3cr3tT0k3n'},
+    };
+    try {
+      const response = await axios.put('http://localhost:3333/post', data, config);
+      console.log(`LOG: response`, JSON.stringify(response, null, 3));
+      this.setState({
+        modalEdit: !this.state.modalEdit,
+      });
+    } catch (e) {
+      console.log(`LOG: e`, JSON.stringify(e, null, 3));
+      this.setState({
+        modalEdit: !this.state.modalEdit,
+      });
     }
   }
 
@@ -140,6 +203,13 @@ class App extends Component {
   toggleEdit = (post = null) => {
     this.setState({
       modalEdit: !this.state.modalEdit,
+      post: post,
+    });
+  }
+
+  toggleViewPost = (post = null) => {
+    this.setState({
+      modalView: !this.state.modalView,
       post: post,
     });
   }
