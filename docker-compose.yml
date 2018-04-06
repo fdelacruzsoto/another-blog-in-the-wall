@@ -1,0 +1,22 @@
+version: '2' # specify docker-compose version
+
+# Define the services/containers to be run
+services:
+
+  # Mongo image
+  database: 
+    image: mongo 
+    ports:
+      - "27017:27017" 
+  
+  front-end: 
+    build: front-end-another-blog-in-the-wall
+    ports:
+      - "80:80" 
+
+  back-end:
+    build: back-end-another-blog-in-the-wall
+    ports:
+      - "3333:3333"
+    links:
+      - database 

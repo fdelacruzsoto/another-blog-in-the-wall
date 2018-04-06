@@ -1,6 +1,12 @@
 # Just another blog in the wall
 ♪ Just another blog in the wall ♪
 
+# Run all together
+
+ - In the root directory run docker-compose build.
+ - Once completed run docker-compose up
+ - Go to localhost
+
 # Run the backend
 
  - First start mongo using mongod command on your terminal

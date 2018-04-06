@@ -19,7 +19,7 @@ const mongo_options = {
 const configDB = {
   name: process.env.DB || 'blog-posts',
   servers: (process.env.DB_SERVERS) ? process.env.DB_SERVERS.split(' ') : [
-    'localhost'
+    'database'
   ],
 };
 
